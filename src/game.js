@@ -35,6 +35,8 @@
     splash: null,
     tile: null,
 
+    startAudio: null,
+
     player1KeyToDirection: {
       87: 'up',
       83: 'down',
@@ -42,11 +44,19 @@
       68: 'right'
     },
 
+    player1KeyToAction: {
+      74: 'attack'
+    },
+
     player2KeyToDirection: {
       38: 'up',
       40: 'down',
       37: 'left',
       39: 'right'
+    },
+
+    player2KeyToAction: {
+      75: 'attack'
     },
 
     init: function () {
@@ -57,7 +67,6 @@
       }.bind(this));
       this.asset.load();
     },
-
     initStage: function () {
       this.width = Math.min(innerWidth, this.sw * 16);
       this.height = Math.min(innerHeight, this.sw * 14);
@@ -102,6 +111,7 @@
 
       this.initBackground();
       this.initPlay();
+      this.initBuller();
       this.initLevel();
 
       //准备游戏
@@ -122,8 +132,9 @@
       this.player1 = new game.Player1({
         id: 'player1',
         atlas: this.asset.play1Atlas,
-        startX: this.background.width >> 1,
-        startY: this.background.height >> 1,
+        startX: 5 * this.sw,
+        startY: 12 * this.sw,
+        explode: this.asset.explode2Atlas
       }).addTo(this.stage);
 
       this.player2 = new game.Player2({
@@ -131,7 +142,11 @@
         atlas: this.asset.play2Atlas,
         startX: 100 + this.background.width >> 1,
         startY: this.background.height >> 1,
+        explode: this.asset.explode2Atlas
       }).addTo(this.stage);
+    },
+    initBuller: function () {
+      
     },
     initLevel: function () {
       this.flag = new Hilo.Bitmap({
@@ -154,13 +169,28 @@
         textVAlign: 'middle'
       }).addTo(this.stage);
     },
+    initAudio: function () {
+      /* this.startAudio = Hilo.WebSound.getAudio({
+        src: 'misc/开始.mp3',
+        loop: false,
+        volume: 1
+      }).on('load', function (e) {}).on('end', function (e) {}).play(); */
+    },
     onUserInput: function (e) {
       if (this.player1KeyToDirection[e.keyCode]) {
         this.player1.start(this.player1KeyToDirection[e.keyCode]);
       }
 
+      if (this.player1KeyToAction[e.keyCode]) {
+        this.player1.onAttack();
+      }
+
       if (this.player2KeyToDirection[e.keyCode]) {
         this.player2.start(this.player2KeyToDirection[e.keyCode]);
+      }
+
+      if (this.player2KeyToAction[e.keyCode]) {
+        this.player2.onAttack();
       }
     },
     onUserOutput: function (e) {

@@ -17,12 +17,32 @@
         isDead: true, //是否已死亡
         direction: 'up', //方向 up down left right
 
+        bullerCount: 0,
+        bullerCurrentCount: 0,
+
         getReady: function () {
             this.isDead = false;
             this.isRun = false;
             //设置起始坐标
             this.x = this.startX;
             this.y = this.startY;
+            this.interval = 6;
+
+            this.initAudio();
+        },
+
+        initAudio: function () {
+            this.runAudio = Hilo.WebSound.getAudio({
+                src: 'misc/自己移动.mp3',
+                loop: false,
+                volume: 1
+            }).on('load', function (e) {}).on('end', function (e) {});
+
+            this.attackAudio = Hilo.WebSound.getAudio({
+                src: 'misc/开始攻击.mp3',
+                loop: false,
+                volume: 1
+            }).on('load', function (e) {}).on('end', function (e) {});
         },
 
         start: function (direction) {
@@ -34,12 +54,32 @@
             }
 
             this.play();
+            this.runAudio.play();
         },
+
         end: function (direction) {
             if (this.direction === direction) {
                 this.isRun = false;
+                this.runAudio.stop();
             }
         },
+
+        onAttack: function () {
+            if (this.bullerCurrentCount < 2) {
+                this.bullerCount++;
+                this.bullerCurrentCount++;
+                this.buller = new window.game.Bullet({
+                    id: 'buller_' + this.bullerCount,
+                    atlas: window.game.asset.bulletAtlas,
+                    startX: this.x,
+                    startY: this.y,
+                    direction: this.direction,
+                    tank: this
+                }).addTo(window.game.stage);
+                this.attackAudio.play();
+            }
+        },
+
         onUpdate: function () {
             if (this.isDead || !this.isRun) {
                 this.stop();

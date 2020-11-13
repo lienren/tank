@@ -5,20 +5,18 @@
     battleCity: null,
     bonus: null,
     bore: null,
-    bullet: null,
     enemy: null,
     explode1: null,
-    explode2: null,
     flag: null,
     gameover: null,
     misc: null,
     num: null,
     pctanke: null,
-    player1: null,
-    player2: null,
     shield: null,
     splash: null,
     tile: null,
+
+    startAudio: null,
 
     load: function () {
       var resources = [{
@@ -101,17 +99,13 @@
       this.battleCity = this.queue.get("battleCity").content
       this.bonus = this.queue.get("bonus").content
       this.bore = this.queue.get("bore").content
-      this.bullet = this.queue.get("bullet").content
       this.enemy = this.queue.get("enemy").content
       this.explode1 = this.queue.get("explode1").content
-      this.explode2 = this.queue.get("explode2").content
       this.flag = this.queue.get("flag").content
       this.gameover = this.queue.get("gameover").content
       this.misc = this.queue.get("misc").content
       this.num = this.queue.get("num").content
       this.pctanke = this.queue.get("pctanke").content
-      this.player1 = this.queue.get("player1").content
-      this.player2 = this.queue.get("player2").content
       this.shield = this.queue.get("shield").content
       this.splash = this.queue.get("splash").content
       this.tile = this.queue.get("tile").content
@@ -153,6 +147,28 @@
           right: [2, 3],
           down: [4, 5],
           left: [6, 7]
+        }
+      });
+
+      this.bulletAtlas = new Hilo.TextureAtlas({
+        image: this.queue.get('bullet').content,
+        frames: [
+          [0, 0, 6, 6],
+          [6, 0, 6, 6],
+          [12, 0, 6, 6],
+          [18, 0, 6, 6]
+        ]
+      });
+
+      this.explode2Atlas = new Hilo.TextureAtlas({
+        image: this.queue.get('explode2').content,
+        frames: [
+          [0, 0, 33, 25],
+          [33, 0, 33, 25],
+          [66, 0, 33, 25]
+        ],
+        sprites: {
+          boom: [0, 1, 2]
         }
       });
 
